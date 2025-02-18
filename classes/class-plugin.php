@@ -14,6 +14,7 @@ require_once __DIR__ . '/patterns/class-patterns.php';
 require_once __DIR__ . '/woocommerce/class-admin-customers.php';
 require_once __DIR__ . '/woocommerce/class-my-account.php';
 require_once __DIR__ . '/oembed/class-oembed.php';
+require_once __DIR__ . '/comments/class-comments.php';
 
 class Plugin {
 	const OPTION_NAME_AUTO = 'gravatar_enhanced_options';
@@ -65,7 +66,7 @@ class Plugin {
 	private $block;
 
 	/**
-	 * @var Patterns
+	 * @var Patterns\Patterns
 	 */
 	private $patterns;
 
@@ -88,6 +89,11 @@ class Plugin {
 	 * @var OEmbed\OEmbed
 	 */
 	private $oembed;
+
+	/**
+	 * @var Comments\Comments
+	 */
+	private $comments;
 
 	public function __construct() {
 		$this->auto_options = new Options\SavedOptions( self::OPTION_NAME_AUTO, true );
@@ -112,6 +118,7 @@ class Plugin {
 		$this->wc_admin_customers = new Woocommerce\AdminCustomers();
 		$this->wc_my_account = new Woocommerce\MyAccount();
 		$this->oembed = new OEmbed\OEmbed();
+		$this->comments = new Comments\Comments( new Comments\Preferences( $this->auto_options ) );
 
 		// Ensure the options always exist. We don't need data saved in it as this is provided by the defaults
 		if ( get_option( self::OPTION_NAME_AUTO, null ) === null ) {
@@ -137,6 +144,7 @@ class Plugin {
 		$this->wc_admin_customers->init();
 		$this->wc_my_account->init();
 		$this->oembed->init();
+		$this->comments->init();
 	}
 
 	/**

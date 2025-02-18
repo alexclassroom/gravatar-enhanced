@@ -7,6 +7,7 @@ use Automattic\Gravatar\GravatarEnhanced\Proxy;
 use Automattic\Gravatar\GravatarEnhanced\Email;
 use Automattic\Gravatar\GravatarEnhanced\Avatar;
 use Automattic\Gravatar\GravatarEnhanced\Analytics;
+use Automattic\Gravatar\GravatarEnhanced\Comments;
 
 require_once __DIR__ . '/class-saved-options.php';
 require_once __DIR__ . '/class-migrate.php';
@@ -69,6 +70,14 @@ class DiscussionsPage {
 			'proxy-options',
 			__( 'Avatar Proxy', 'gravatar-enhanced' ),
 			[ $this, 'display_proxy_settings' ],
+			'discussion',
+			'avatars'
+		);
+
+		add_settings_field(
+			'comment-options',
+			__( 'Gravatar Comments', 'gravatar-enhanced' ),
+			[ $this, 'display_comment_settings' ],
 			'discussion',
 			'avatars'
 		);
@@ -213,6 +222,23 @@ class DiscussionsPage {
 				<?php esc_html_e( 'Help us make Gravatar better by allowing us to collect anonymous usage tracking of the features used.', 'gravatar-enhanced' ); ?>
 
 				<?php _e( 'You can find details about this on the <a href="https://support.gravatar.com/gravatar-enhanced-wordpress-plugin/">support page</a>.', 'gravatar-enhanced' ); ?>
+			</label>
+		</fieldset>
+		<?php
+	}
+
+	/**
+	 * @return void
+	 */
+	public function display_comment_settings() {
+		$preferences = new Comments\Preferences( $this->auto_options );
+		$comments = $preferences->get_options();
+		?>
+		<fieldset>
+			<label for="gravatar_comments">
+				<input type="checkbox" id="gravatar_comments" name="gravatar_comments" <?php checked( $comments->enabled ); ?> />
+
+				<?php esc_html_e( 'Show Gravatar in the comment form.', 'gravatar-enhanced' ); ?>
 			</label>
 		</fieldset>
 		<?php
